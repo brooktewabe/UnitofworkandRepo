@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using UnitofworkandRepo.Interface;
 using UnitofworkandRepo.Models;
 
@@ -10,9 +13,12 @@ namespace UnitofworkandRepo.Controllers
     public class ToDoItemController : ControllerBase
     {
         private readonly IUnitofWork unitofWork;
-        public ToDoItemController(IUnitofWork work)
+        private readonly IMapper _mapper;
+
+        public ToDoItemController(IMapper mapper, IUnitofWork work)
         {
             this.unitofWork = work;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -20,6 +26,42 @@ namespace UnitofworkandRepo.Controllers
         {
             var entities = await this.unitofWork.todoitemRepository.GetAllAsync();
             return Ok(entities);
+        }
+        [HttpGet("GetDTO")]
+        public async Task<IActionResult> GetAllDTO()
+        {
+            var entities = await this.unitofWork.todoitemRepository.GetAllAsync();
+            var toDoItemsdto = _mapper.Map<IEnumerable<ToDoItemRespDTO>>(entities);
+            return Ok(toDoItemsdto);
+        }
+
+        [HttpGet("GetPaginated")]
+        public async Task<IActionResult> GetAllPaginated(int page = 1, int pageSize = 4)
+        {
+            var entities = await this.unitofWork.todoitemRepository.GetAllAsync();
+
+            var totalItems = entities.Count();
+            var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            var paginatedEntities = entities
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var paginationMetadata = new
+            {
+                totalCount = totalItems,
+                pageSize,
+                currentPage = page,
+                totalPages
+            };
+
+            Response.Headers.Add("Total-Count", totalItems.ToString());
+            Response.Headers.Add("Page-Count", totalPages.ToString());
+            Response.Headers.Add("Page-Number", page.ToString());
+            Response.Headers.Add("Page-Size", pageSize.ToString());
+
+            return Ok(paginatedEntities);
         }
         [HttpGet("Getbycode/{id}")]
         public async Task<IActionResult> Getbycode(int id)

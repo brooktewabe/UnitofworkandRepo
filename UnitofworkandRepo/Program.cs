@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using UnitofworkandRepo.Interface;
 using UnitofworkandRepo.Models;
 using UnitofworkandRepo.Repos;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,9 @@ builder.Services.AddCors(options =>
                .AllowAnyMethod();
     });
 });
+
+// Configure AutoMapper
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();
 

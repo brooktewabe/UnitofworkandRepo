@@ -26,9 +26,9 @@ namespace UnitofworkandRepo.Repos
                 await DbSet.AddAsync(entity);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -52,9 +52,9 @@ namespace UnitofworkandRepo.Repos
                     return false;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -73,9 +73,9 @@ namespace UnitofworkandRepo.Repos
                     return false;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
     }
