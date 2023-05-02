@@ -3,6 +3,7 @@ using UnitofworkandRepo.Interface;
 using UnitofworkandRepo.Models;
 using UnitofworkandRepo.Repos;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<TestContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("dbconn")));
+builder.Services.AddTransient<IAccountRepository, AccountRepo>();
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+        .AddEntityFrameworkStores<TestContext>()
+        .AddDefaultTokenProviders();
 builder.Services.AddScoped<IUnitofWork, UnitofWorkRepo>();
 
 // Add CORS middleware

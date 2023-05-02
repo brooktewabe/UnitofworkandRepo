@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -20,7 +21,7 @@ namespace UnitofworkandRepo.Controllers
             this.unitofWork = work;
             _mapper = mapper;
         }
-
+       // [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

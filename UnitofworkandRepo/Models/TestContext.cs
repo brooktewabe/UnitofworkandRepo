@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace UnitofworkandRepo.Models;
 
-public partial class TestContext : DbContext
+public partial class TestContext : IdentityDbContext<ApplicationUser>
 {
     public TestContext()
     {
@@ -35,7 +36,7 @@ public partial class TestContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("name");
         });
-
+        base.OnModelCreating(modelBuilder);
         OnModelCreatingPartial(modelBuilder);
     }
 
